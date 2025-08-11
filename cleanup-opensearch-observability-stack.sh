@@ -2,8 +2,6 @@
 
 # OpenSearch Observability Stack Cleanup Script
 # This script removes all components deployed by the deployment script
-# Author: AI Assistant
-# Date: $(date +%Y-%m-%d)
 
 # Colors for output
 RED='\033[0;31m'
