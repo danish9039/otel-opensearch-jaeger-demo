@@ -10,7 +10,7 @@ allInOne:
       cpu: "500m"
       memory: "1Gi"
 
-# Add this to fix the headless service issue
+
 query:
   service:
     type: ClusterIP
