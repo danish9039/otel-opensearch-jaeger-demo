@@ -1,6 +1,6 @@
 allInOne:
   enabled: true
-  # Remove the QUERY_BASE_PATH to use default root path /
+  # Removed the QUERY_BASE_PATH to use default root path /
   extraEnv: []
   resources:
     requests:
