@@ -92,6 +92,19 @@ check_required_files() {
   done
 }
 
+build_jaeger_deps() {
+  local chart_dir="$ROOT_DIR/helm-charts/charts/jaeger"
+  if [[ -f "$chart_dir/Chart.yaml" ]]; then
+    log "Building Helm dependencies for Jaeger chart..."
+    # Ensure charts directory exists; helm will create/populate as needed
+    mkdir -p "$chart_dir/charts"
+    helm dependency build "$chart_dir"
+    success "Helm dependencies for Jaeger chart are ready"
+  else
+    warn "Jaeger chart not found at $chart_dir; skipping dependency build"
+  fi
+}
+
 main() {
   log "Running preflight checks..."
 
@@ -107,6 +120,9 @@ main() {
   check_required_files
   check_resources
   check_cluster
+
+  # Prepare Jaeger chart dependencies so local install works
+  build_jaeger_deps
 
   success "Preflight checks passed"
 
