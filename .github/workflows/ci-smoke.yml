@@ -1,0 +1,55 @@
+name: ci-smoke-test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Kubernetes in Docker (kind)
+        uses: helm/kind-action@v1.10.0
+        with:
+          # Small cluster adequate for demo; adjust resources as needed
+          cluster_name: ci-smoke
+
+      - name: Install kubectl and helm
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.29.2'
+      - uses: azure/setup-helm@v4
+        with:
+          version: 'v3.14.4'
+
+      - name: Show cluster info
+        run: |
+          kubectl version --output=yaml
+          kubectl get nodes -o wide
+
+      - name: Deploy stack with preflight
+        run: |
+          chmod +x *.sh
+          ./deploy-opensearch-observability-stack-preflight.sh
+
+      - name: Smoke checks
+        run: |
+          set -euo pipefail
+          # Wait for key pods to be Ready as a minimal smoke test
+          kubectl -n opensearch get pods
+          kubectl -n opensearch rollout status deploy/opensearch-dashboards --timeout=10m
+          kubectl -n jaeger rollout status deploy/jaeger --timeout=10m
+          kubectl -n otel-demo rollout status deploy/frontend --timeout=10m
+
+      - name: Teardown
+        if: always()
+        run: |
+          ./cleanup-opensearch-observability-stack-ci.sh
+
