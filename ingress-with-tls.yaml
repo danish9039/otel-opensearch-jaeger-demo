@@ -1,0 +1,140 @@
+---
+# Jaeger Query ClusterIP Service (deployed in jaeger namespace)
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query-clusterip
+  namespace: jaeger
+  labels:
+    app.kubernetes.io/component: query
+    app.kubernetes.io/name: jaeger
+spec:
+  type: ClusterIP
+  ports:
+  - name: http-query
+    port: 16686
+    protocol: TCP
+    targetPort: 16686
+  selector:
+    app.kubernetes.io/component: all-in-one
+    app.kubernetes.io/name: jaeger
+
+---
+# Proxy service for Jaeger Query (jaeger namespace -> ingress-nginx namespace)
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query-proxy
+  namespace: ingress-nginx
+spec:
+  type: ExternalName
+  externalName: jaeger-query-clusterip.jaeger.svc.cluster.local
+  ports:
+  - port: 16686
+    targetPort: 16686
+    protocol: TCP
+
+---
+# Proxy service for Frontend (otel-demo namespace -> ingress-nginx namespace)
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-proxy
+  namespace: ingress-nginx
+spec:
+  type: ExternalName
+  externalName: frontend-proxy.otel-demo.svc.cluster.local
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+
+---
+# Proxy service for Load Generator (otel-demo namespace -> ingress-nginx namespace)
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgenerator-proxy
+  namespace: ingress-nginx
+spec:
+  type: ExternalName
+  externalName: load-generator.otel-demo.svc.cluster.local
+  ports:
+  - port: 8089
+    targetPort: 8089
+    protocol: TCP
+
+---
+# Proxy service for OpenSearch Dashboards (opensearch namespace -> ingress-nginx namespace)
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-dashboards-proxy
+  namespace: ingress-nginx
+spec:
+  type: ExternalName
+  externalName: opensearch-dashboards.opensearch.svc.cluster.local
+  ports:
+  - port: 5601
+    targetPort: 5601
+    protocol: TCP
+
+---
+# Ingress resource with TLS in ingress-nginx namespace
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: subdomain-ingress
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - jaegertracing.fun
+    - shop.jaegertracing.fun
+    - loadgen.jaegertracing.fun
+    - opensearch.jaegertracing.fun
+    secretName: jaegertracing-fun-tls
+  rules:
+  - host: jaegertracing.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: jaeger-query-proxy
+            port:
+              number: 16686
+        path: /
+        pathType: Prefix
+  - host: shop.jaegertracing.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend-proxy
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  - host: loadgen.jaegertracing.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: loadgenerator-proxy
+            port:
+              number: 8089
+        path: /
+        pathType: Prefix
+  - host: opensearch.jaegertracing.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: opensearch-dashboards-proxy
+            port:
+              number: 5601
+        path: /
+        pathType: Prefix

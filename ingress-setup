@@ -1,0 +1,14 @@
+digraph {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="" nodesep=0.60 pad=2.0 rankdir=TB ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	subgraph "cluster_Namespace: jaeger" {
+		graph [bgcolor=white fontname="Sans-Serif" fontsize=12 label=<<table border="0" width="100%"><tr><td fixedsize="true" width="64" height="64"><img src="/home/danish/.local/share/pipx/venvs/kubediagrams/lib/python3.12/site-packages/resources/k8s/group/ns.png" /></td></tr><tr><td>jaeger</td></tr></table>> labeljust=l pencolor=black rankdir=LR shape=box style="rounded,dashed" tooltip="Namespace: jaeger"]
+		"349f6346d58849b0b3b618703935e5fc" [label="subdomain
+-ingress" height=2.3 image="/home/danish/.local/share/pipx/venvs/kubediagrams/lib/python3.12/site-packages/resources/k8s/network/ing.png" shape=none tooltip="kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: subdomain-ingress
+..."]
+	}
+}

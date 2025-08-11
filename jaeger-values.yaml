@@ -1,0 +1,17 @@
+allInOne:
+  enabled: true
+  # Remove the QUERY_BASE_PATH to use default root path /
+  extraEnv: []
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+# Add this to fix the headless service issue
+query:
+  service:
+    type: ClusterIP
+

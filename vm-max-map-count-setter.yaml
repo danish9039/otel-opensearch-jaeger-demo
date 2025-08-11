@@ -1,0 +1,49 @@
+# vm-max-map-count-setter.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: max-map-count-setter
+  namespace: kube-system
+  labels:
+    k8s-app: max-map-count-setter
+spec:
+  selector:
+    matchLabels:
+      name: max-map-count-setter
+  template:
+    metadata:
+      labels:
+        name: max-map-count-setter
+    spec:
+      hostPID: true
+      initContainers:
+      - name: max-map-count-setter
+        image: busybox:1.36
+        securityContext:
+          privileged: true
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo 'Setting vm.max_map_count to 262144'
+          sysctl -w vm.max_map_count=262144
+          echo 'vm.max_map_count=262144' >> /host-sys/etc/sysctl.conf
+          echo 'Done'
+        volumeMounts:
+        - name: host-sys
+          mountPath: /host-sys
+      containers:
+      - name: sleep
+        image: busybox:1.36
+        command: ["sleep", "infinity"]
+        resources:
+          requests:
+            cpu: 5m
+            memory: 5Mi
+      volumes:
+      - name: host-sys
+        hostPath:
+          path: /
+      tolerations:
+      - operator: Exists
+
