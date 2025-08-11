@@ -60,4 +60,4 @@ Note: This one-liner uses --force and --grace-period=0 for faster deletion as pr
 ## Troubleshooting
 - Ensure Minikube is running and kubectl points to it
 - If ports are busy, kill existing forwards: pkill -f "kubectl port-forward"
-- See DEPLOYMENT_README.md for more
+
