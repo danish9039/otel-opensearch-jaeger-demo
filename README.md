@@ -2,7 +2,7 @@
 
 A fast, local observability demo that deploys OpenSearch, OpenSearch Dashboards, Jaeger (OpenSearch storage), and the OpenTelemetry Demo to Minikube.
 
-For a deep dive, see DEPLOYMENT_README.md. This README gives you the quickest path to up and running.
+This README gives you the quickest path to up and running.
 
 ## Quick Start (Minikube)
 
@@ -14,7 +14,7 @@ minikube start --memory=6144 --cpus=4
 2) Deploy the stack (portable script)
 ```
 chmod +x *.sh
-./deploy-opensearch-observability-stack-portable.sh
+./deploy.sh
 ```
 
 3) Port-forward to access UIs
@@ -40,7 +40,7 @@ kubectl port-forward -n otel-demo svc/load-generator 8089:8089 &
 5) Cleanup
 ```
 # Preferred: full cleanup script
-./cleanup-opensearch-observability-stack.sh
+./cleanup.sh
 ```
 
 ### Fast one-liner cleanup (force delete, zero grace period)
@@ -52,10 +52,10 @@ pkill -f "kubectl port-forward" 2>/dev/null || true; for ns in otel-demo jaeger 
 Note: This one-liner uses --force and --grace-period=0 for faster deletion as preferred. It’s meant for local demos; use with care.
 
 ## Files
-- deploy-opensearch-observability-stack-portable.sh: Portable, path-safe deploy script
+- deploy.sh:  deployment script
 - start-port-forwarding.sh: Starts all port-forward sessions
-- cleanup-opensearch-observability-stack.sh: Removes all components
-- DEPLOYMENT_README.md: Detailed docs and troubleshooting
+- cleanup.sh: Removes all components
+
 
 ## Troubleshooting
 - Ensure Minikube is running and kubectl points to it
