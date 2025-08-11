@@ -7,8 +7,7 @@
 # - Mandatory image pre-pull with runtime detection (minikube/docker/nerdctl/crictl)
 # - More robust rollout wait logic for Deployments and StatefulSets
 # - Explicit namespace handling for Jaeger service apply
-# Author: AI Assistant
-# Date: $(date +%Y-%m-%d)
+
 
 set -euo pipefail  # Safer bash options
 
