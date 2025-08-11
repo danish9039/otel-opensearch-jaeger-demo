@@ -2,8 +2,6 @@
 
 # OpenSearch Observability Stack Port Forwarding Script
 # This script sets up port forwarding for all services
-# Author: AI Assistant
-# Date: $(date +%Y-%m-%d)
 
 # Colors for output
 RED='\033[0;31m'
