@@ -1,4 +1,4 @@
-# OpenTelemetry Demo - Corrected for Jaeger v2.8.0 Integration
+
 # Disable all bundled infrastructure components
 opentelemetry-collector:
   enabled: false
