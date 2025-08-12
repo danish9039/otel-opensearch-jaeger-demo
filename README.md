@@ -6,18 +6,23 @@ This README gives you the quickest path to up and running.
 
 ## Quick Start (Minikube)
 
-1) Start Minikube (recommended resources)
+1) Clone the repo locally
+```
+git clone https://github.com/danish9039/otel-opensearch-jaeger-demo.git
+```
+
+2) Start Minikube (recommended resources)
 ```
 minikube start --memory=6144 --cpus=4
 ```
 
-2) Deploy the stack (portable script)
+3) Deploy the stack (portable script)
 ```
 chmod +x *.sh
 ./deploy.sh
 ```
 
-3) Port-forward to access UIs
+4) Port-forward to access UIs
 ```
 # Use the helper script (recommended)
 ./start-port-forwarding.sh
@@ -30,14 +35,14 @@ kubectl port-forward -n otel-demo svc/frontend-proxy 8080:8080 &
 kubectl port-forward -n otel-demo svc/load-generator 8089:8089 &
 ```
 
-4) Open the URLs
+5) Open the URLs
 - Jaeger UI: http://localhost:16686
 - OpenSearch Dashboards: http://localhost:5601
 - OpenSearch API: http://localhost:9200
 - OTEL Demo Frontend: http://localhost:8080
 - Load Generator: http://localhost:8089
 
-5) Cleanup
+6) Cleanup
 ```
 # Preferred: full cleanup script
 ./cleanup.sh
