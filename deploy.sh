@@ -129,6 +129,12 @@ check_required_files() {
 build_jaeger_deps() {
   local chart_dir="$ROOT_DIR/helm-charts/charts/jaeger"
   if [[ -f "$chart_dir/Chart.yaml" ]]; then
+    log "Preparing Helm repositories for Jaeger chart dependencies..."
+    # Add required repos for dependencies declared in Chart.yaml
+    helm repo add incubator https://charts.helm.sh/incubator >/dev/null 2>&1 || true
+    helm repo add bitnami https://charts.bitnami.com/bitnami >/dev/null 2>&1 || true
+    helm repo update >/dev/null 2>&1 || true
+
     log "Building Helm dependencies for Jaeger chart..."
     mkdir -p "$chart_dir/charts"
     helm dependency build "$chart_dir"
